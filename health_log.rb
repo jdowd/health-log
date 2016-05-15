@@ -15,6 +15,10 @@ class HealthLog
     end
   end
 
+  def last_n_days(n=7)
+
+  end
+
   private
 
   def date

@@ -58,6 +58,28 @@ class HealthLogTest < MiniTest::Test
     assert_equal expected, actual
   end
 
+  def test_add_partial_data_to_a_date_entry
+    input = <<-TXT.gsub(/\s+/,' ').strip << ("\n")
+      200.5 dq: ate cookie dv: ate too much bl: 4 s: not bad x: strong workout
+    TXT
+    @log.entry input
+    @log.entry "\n"
+    expected = {
+      @date => {
+        weight: 200.5,
+        diet: {
+          quality: "ate cookie",
+          volume: "ate too much"
+        },
+        belt_loop: '4',
+        sleep: "not bad",
+        exercise: "strong workout",
+      }
+    }.to_yaml
+    actual = File.read @file
+    assert_equal expected, actual
+  end
+
   def test_skipping_weight
     input = <<-TXT.gsub(/\s+/,' ').strip << ("\n")
       dq: ate cookie dv: ate too much bl: 4 s: not bad x: strong workout
@@ -79,7 +101,7 @@ class HealthLogTest < MiniTest::Test
     assert_equal expected, actual
   end
 
-  def test_last_7_days_report
+  def test_handles_empty_input
   end
 
   def test_reviewing_all_entries
