@@ -11,10 +11,8 @@ health**" in the Alfred search bar, and it will open Terminal with that command.
 
 An entry like this:
 ```
-w: 200.3 s: 7hrs bl: 4 x: 20min on the rower dq: good,
-except for a candy bar dv: overate at lunch c: travelling and got hungry in
-airport :(
-```
+w: 200.3 s: 7hrs bl: 4 x: 20min on the rower dq: good, except for a candy bar
+dv: overate at lunch c: travelling and got hungry in airport :( ```
 
 will be interpreted as:
 ```
