@@ -3,7 +3,7 @@
 require_relative 'health_log'
 
 
-file = File.join __dir__, 'jd.yml'
+file = File.join __dir__, 'history.yml'
 log = HealthLog.new file
 
 puts "Record data for s, bl, x, dq, dv:"
@@ -13,5 +13,25 @@ input = gets.chomp
 log.entry input
 puts
 
-log.last_n_days(7)
+def normalize(string)
+  string.to_s.tr('_', ' ').capitalize
+end
+
+def justify(string)
+  (normalize(string) + ':').ljust 15
+end
+
+log.last_n_days(7).each do |date, data|
+  puts; puts date
+  data.each do |field, value|
+    if value.is_a? Hash
+      value.each do |key, entry|
+        name = field.to_s + ' ' + key.to_s
+        puts ['   ', [justify(name)].join('-'), entry].join
+      end
+    else
+      puts ['   ', justify(field), value].join
+    end
+  end
+end
 puts

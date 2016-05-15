@@ -12,6 +12,8 @@ class HealthLogTest < MiniTest::Test
   end
 
   def teardown
+    fixture_file = Pathname('fixture.yml')
+    fixture_file.delete if fixture_file.exist?
     test_file = Pathname(@file)
     test_file.delete if test_file.exist?
   end
@@ -39,10 +41,7 @@ class HealthLogTest < MiniTest::Test
   end
 
   def test_skipping_weight
-    input = <<-TXT.gsub(/\s+/,' ').strip << ("\n")
-      dq: ate cookie dv: ate too much bl: 4 s: not bad x: strong workout
-    TXT
-    @log.entry input
+    @log.entry sample_input.gsub('200.5','')
     expected = expected_output
     expected[@date].delete(:weight)
     actual = File.read @file
@@ -59,11 +58,53 @@ class HealthLogTest < MiniTest::Test
   end
 
   def test_report_for_last_n_days
+    expected = {
+      "#{Date.today.to_s}" => {
+        sleep: '6.5',
+        exercise: 'none, gym was closed',
+        diet: {
+          quality: '2 or 3 servings of sugar',
+          volume: 'not bad'
+        },
+        belt_loop: '4'
+      },
+
+      "#{(Date.today - 1).to_s}" => {
+        results: '-'
+      },
+      "#{(Date.today - 2).to_s}" => {
+        sleep: '5.5',
+        exercise: 'great',
+        diet: {
+          quality: 'good',
+          volume: 'very good',
+        },
+        belt_loop: '3'
+      }
+    }
+
+    first_entries = expected.dup
+    first_entries.delete (Date.today - 1).to_s
+    sample_data = first_entries.merge({
+      "#{(Date.today - 4).to_s}" => {
+        sleep: '9.5',
+        exercise: 'great',
+        diet: {
+          quality: 'good',
+          volume: 'very good',
+        },
+        belt_loop: '3'
+      },
+    }).to_yaml
+    File.open('fixture.yml', 'w') { |f| f.write sample_data }
+
+    log = HealthLog.new 'fixture.yml'
+    assert_equal expected, log.last_n_days(3)
   end
 
   def sample_input
     <<-TXT.gsub(/\s+/,' ').strip << ("\n")
-      200.5 dq: ate cookie bl: 4 dv: ate too much s: not bad x: strong workout
+      200.5 dq: ate cookie bl: 4 dv: ate too much s: not bad c: random comments x: strong workout
     TXT
   end
 
@@ -77,6 +118,7 @@ class HealthLogTest < MiniTest::Test
         },
         belt_loop: '4',
         sleep: "not bad",
+        comments: 'random comments',
         exercise: "strong workout",
       }
     }

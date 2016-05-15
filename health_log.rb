@@ -16,10 +16,21 @@ class HealthLog
   end
 
   def last_n_days(n=7)
-
+    store.transaction do
+      roots_for_last_n_days(n).each_with_object({}) do |date, entries|
+        entries[date] ||= {}
+        entries[date] = store.fetch(date, {results: '-'}).to_hash
+      end
+    end
   end
 
   private
+
+  def roots_for_last_n_days(n)
+    (0..(n-1)).each_with_object([]) do |n, roots|
+      roots << (Date.today - n).to_s
+    end
+  end
 
   def date
     Date.today.to_s
@@ -58,6 +69,7 @@ class HealthLog
   def keyword_mapping
     { 's:' => "sleep",
       'bl:' => "belt_loop",
+      'c:' => 'comments',
       'x:' => "exercise",
       'dq:' => {"diet" => 'quality'},
       'dv:' => {"diet" => 'volume'}
