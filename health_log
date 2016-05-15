@@ -9,6 +9,7 @@ log = HealthLog.new file
 puts
 puts "Record today's entry."
 puts "Field tokens: w:, s:, bl:, x:, dq:, dv:, c:"
+puts
 
 input = gets.chomp
 
