@@ -2,9 +2,10 @@
 
 require_relative 'health_log'
 
-log = HealthLog.new 'jd.yml'
 
-puts
+file = File.join __dir__, 'jd.yml'
+log = HealthLog.new file
+
 puts "Record data for s, bl, x, dq, dv:"
 
 input = gets.chomp
