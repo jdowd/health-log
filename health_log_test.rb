@@ -40,14 +40,6 @@ class HealthLogTest < MiniTest::Test
     assert_equal expected_output.to_yaml, actual
   end
 
-  def test_skipping_weight
-    @log.entry sample_input.gsub('200.5','')
-    expected = expected_output
-    expected[@date].delete(:weight)
-    actual = File.read @file
-    assert_equal expected.to_yaml, actual
-  end
-
   def test_reviewing_all_entries
   end
 
@@ -104,14 +96,14 @@ class HealthLogTest < MiniTest::Test
 
   def sample_input
     <<-TXT.gsub(/\s+/,' ').strip << ("\n")
-      200.5 dq: ate cookie bl: 4 dv: ate too much s: not bad c: random comments x: strong workout
+      w: 200.5 dq: ate cookie bl: 4 dv: ate too much s: not bad c: random comments x: strong workout
     TXT
   end
 
   def expected_output
     {
       @date => {
-        weight: 200.5,
+        weight: '200.5',
         diet: {
           quality: "ate cookie",
           volume: "ate too much"

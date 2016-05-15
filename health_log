@@ -6,7 +6,9 @@ require_relative 'health_log'
 file = File.join __dir__, 'history.yml'
 log = HealthLog.new file
 
-puts "Record data for s, bl, x, dq, dv:"
+puts
+puts "Record today's entry."
+puts "Field tokens: w:, s:, bl:, x:, dq:, dv:, c:"
 
 input = gets.chomp
 

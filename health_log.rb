@@ -49,9 +49,6 @@ class HealthLog
         end
         current_keyword = new_keyword
         chunk = ""
-      elsif /\d\d\d\.\d/ =~ chunk.strip
-        result[:weight] = chunk.strip.to_f
-        chunk = ""
       end
     end
     store_data result, current_keyword, '', chunk
@@ -68,6 +65,7 @@ class HealthLog
 
   def keyword_mapping
     { 's:' => "sleep",
+      'w:' => "weight",
       'bl:' => "belt_loop",
       'c:' => 'comments',
       'x:' => "exercise",
