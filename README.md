@@ -4,10 +4,7 @@ metrics. You are what you track, or something like that.
 
 
 #### Usage
-To record a new entry type "**health [duration]**" in your terminal.
-
-The `duration` argument is optional. By default you'll see the last 7 days, but
-you can pass any integer duration you like.
+To record a new entry type "**health**" in your terminal.
 
 It's even easier with [Alfred](https://www.alfredapp.com/): Just type "**>
 health**" in the Alfred search bar, and it will open Terminal with that command.
@@ -32,6 +29,13 @@ will be interpreted as:
 
 Your entries will be saved in `history.yml` in the repo (gitignored).
 
+##### Optional arguments
+There are a couple of optional arguments you can pass to `health`:
+  - Any integer will change the default 7 day report to your preference. `health
+    3` will return the last 3 days, for example.
+  - `health t` won't ask for an entry, and will just report today's data.
+  - `health r` won't ask for an entry, and will just report data for the default
+    or specified duration.
 
 #### Installation
 - clone the repo locally
