@@ -3,6 +3,10 @@
 require_relative 'health_log'
 
 
+duration_argument = ARGV.shift || 7
+duration = duration_argument.to_i
+
+
 file = File.join __dir__, 'history.yml'
 log = HealthLog.new file
 
@@ -24,7 +28,7 @@ def justify(string)
   (normalize(string) + ':').ljust 15
 end
 
-log.last_n_days(7).each do |date, data|
+log.last_n_days(duration).each do |date, data|
   puts; puts date
   log.tokens.each do |token|
     field = log.send(:keyword_mapping)[token]

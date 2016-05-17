@@ -4,7 +4,10 @@ metrics. You are what you track, or something like that.
 
 
 #### Usage
-To record a new entry type "**health**" in your terminal.
+To record a new entry type "**health [duration]**" in your terminal.
+
+The `duration` argument is optional. By default you'll see the last 7 days, but
+you can pass any integer duration you like.
 
 It's even easier with [Alfred](https://www.alfredapp.com/): Just type "**>
 health**" in the Alfred search bar, and it will open Terminal with that command.
