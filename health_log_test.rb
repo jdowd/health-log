@@ -7,7 +7,7 @@ require_relative 'health_log'
 class HealthLogTest < MiniTest::Test
   def setup
     @file = "test.yml"
-    @log = HealthLog.new @file
+    @log = HealthLog.new @file, config_file: 'test_config.yml'
     @date = Date.today.to_s
   end
 
@@ -58,7 +58,7 @@ class HealthLogTest < MiniTest::Test
           quality: '2 or 3 servings of sugar',
           volume: 'not bad'
         },
-        belt_loop: '4'
+        'belt loop' => '4'
       },
 
       "#{(Date.today - 1).to_s}" => {
@@ -104,11 +104,9 @@ class HealthLogTest < MiniTest::Test
     {
       @date => {
         weight: '200.5',
-        diet: {
-          quality: "ate cookie",
-          volume: "ate too much"
-        },
-        belt_loop: '4',
+        'diet quality': "ate cookie",
+        'belt loop': '4',
+        'diet volume': "ate too much",
         sleep: "not bad",
         comments: 'random comments',
         exercise: "strong workout",

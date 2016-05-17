@@ -2,10 +2,12 @@ require 'yaml'
 require 'yaml/store'
 
 class HealthLog
-  attr_reader :store
+  attr_reader :store, :config
 
-  def initialize(file)
+  def initialize(file, config_file: 'config.yml')
     @store = YAML::Store.new file
+    config_path = File.join __dir__, config_file
+    @config = YAML.load File.read(config_path)
   end
 
   def entry(raw_input)
@@ -24,12 +26,16 @@ class HealthLog
     end
   end
 
+  def tokens
+    keyword_mapping.keys
+  end
+
   private
 
   def roots_for_last_n_days(n)
     (0..(n-1)).each_with_object([]) do |n, roots|
       roots << (Date.today - n).to_s
-    end
+    end.reverse
   end
 
   def date
@@ -37,6 +43,7 @@ class HealthLog
   end
 
   def parsed_input(raw_input)
+    return {} if raw_input.strip.empty?
     chunk = ""
     result = {}
     current_keyword = nil
@@ -59,32 +66,17 @@ class HealthLog
     /\w+:/
   end
 
-  def keywords
-    keyword_mapping.keys
-  end
-
   def keyword_mapping
-    { 's:' => "sleep",
-      'w:' => "weight",
-      'bl:' => "belt_loop",
-      'c:' => 'comments',
-      'x:' => "exercise",
-      'dq:' => {"diet" => 'quality'},
-      'dv:' => {"diet" => 'volume'}
-    }
+    @keywords ||= config['tokens'].each_with_object({}) do |(k,v), tokens|
+      token = k + ':'
+      tokens[token] = v
+    end
   end
 
   def store_data(result, current_keyword, new_keyword, chunk)
-    key = keyword_mapping[current_keyword]
+    key = keyword_mapping[current_keyword].to_sym
     value = chunk.gsub(new_keyword, '').strip
-    if key.is_a? Hash
-      parent_key = key.keys.first.to_sym
-      sub_key = key.values.first.to_sym
-      result[parent_key] ||= {}
-      result[parent_key][sub_key] = value
-    elsif key.is_a? String
-      result[key.to_sym] = value
-    end
+    result[key.to_sym] = value
   end
 
 

@@ -33,8 +33,12 @@ Your entries will be saved in `history.yml` in the repo (gitignored).
 #### Installation
 - clone the repo locally
 - cd into repo
-- `chmod +x health_log`
-- `ln -s $PWD/health_log /usr/local/bin/health`
+- set up your keyword tokens:
+  - `cp test_config.yml config.yml`
+  - make any edits to `config.yml` you'd like
+- add the executable script:
+  - `chmod +x health_log`
+  - `ln -s $PWD/health_log /usr/local/bin/health`
 
 #### Road map
 Lots of stuff to add, but this is not a super high priority atm.
