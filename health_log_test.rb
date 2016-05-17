@@ -24,11 +24,21 @@ class HealthLogTest < MiniTest::Test
     assert_equal expected_output.to_yaml, actual
   end
 
-  def test_add_partial_data_to_a_date_entry
+  def test_add_partial_data
     @log.entry sample_input
-    @log.entry "x: partial entry"
+    @log.entry "bf: partial entry"
     expected = expected_output
-    expected[@date][:exercise] = "partial entry"
+    expected[@date][:'bad food'] = "partial entry"
+    actual = File.read @file
+    assert_equal expected.to_yaml, actual
+  end
+
+  def test_appending_data_to_field
+    @log.entry sample_input
+    log = HealthLog.new @file, config_file: 'test_config.yml'
+    log.entry "x: partial entry"
+    expected = expected_output
+    expected[@date][:exercise] += ". partial entry"
     actual = File.read @file
     assert_equal expected.to_yaml, actual
   end

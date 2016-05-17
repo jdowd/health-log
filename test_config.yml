@@ -6,6 +6,7 @@ tokens:
   x: 'exercise'
   bl: 'belt loop'
   bl: 'belt loop'
+  bf: 'bad food'
   c: 'comments'
   dq: 'diet quality'
   dv: 'diet volume'

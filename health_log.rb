@@ -76,7 +76,16 @@ class HealthLog
   def store_data(result, current_keyword, new_keyword, chunk)
     key = keyword_mapping[current_keyword].to_sym
     value = chunk.gsub(new_keyword, '').strip
-    result[key.to_sym] = value
+    result[key] = existing_value(key) + value
+  end
+
+  def existing_value(key)
+    existing = existing_values.fetch key, nil
+    existing ? (existing + '. ') : ''
+  end
+
+  def existing_values
+    @existing_values ||= store.fetch(date, {})
   end
 
 
