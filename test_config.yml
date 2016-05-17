@@ -1,5 +1,6 @@
 # You can edit these tokens as desired. Put them in the order you'd like them displayed
 ---
+target: 195
 tokens:
   w: 'weight'
   s: 'sleep'

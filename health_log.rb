@@ -26,6 +26,27 @@ class HealthLog
     end
   end
 
+  def graph(n=7)
+    weight_diffs_for_last_n_days(n).each_with_object([]) do |diff, chart|
+      symbol = diff > 0 ? '+' : '-'
+      chart << symbol * diff.abs
+    end
+  end
+
+  def weight_diffs_for_last_n_days(n=7)
+    weights_for_last_n_days(n).map { |w| ((w - target) * 10).to_i }
+  end
+
+  def weights_for_last_n_days(n=7)
+    last_n_days(n).each_with_object([]) do |(date, data), result|
+      result << data.fetch(:weight, target).to_f
+    end
+  end
+
+  def target
+    config['target'].to_f
+  end
+
   def tokens
     keyword_mapping.keys
   end

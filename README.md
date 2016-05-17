@@ -29,6 +29,9 @@ will be interpreted as:
 
 Your entries will be saved in `history.yml` in the repo (gitignored).
 
+After the summary of your last n days, `health` will output a bar graph showing
+the distance from your target weight for each of the last n days.
+
 ##### Optional arguments
 There are a couple of optional arguments you can pass to `health`:
   - Any integer will change the default 7 day report to your preference. `health
@@ -43,6 +46,8 @@ There are a couple of optional arguments you can pass to `health`:
 - set up your keyword tokens:
   - `cp test_config.yml config.yml`
   - make any edits to `config.yml` you'd like
+- add your target weight
+  - modify `config.yml` to add your target weight
 - add the executable script:
   - `chmod +x health_log`
   - `ln -s $PWD/health_log /usr/local/bin/health`

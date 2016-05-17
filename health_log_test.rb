@@ -50,6 +50,35 @@ class HealthLogTest < MiniTest::Test
     assert_equal expected_output.to_yaml, actual
   end
 
+  def test_graph
+    weights = { Date.today.to_s => { weight: 199.5 },
+                (Date.today - 1).to_s => { weight: 198.0},
+                (Date.today - 2).to_s => { weight: 192 }
+    }.to_yaml
+    File.open('fixture.yml', 'w') { |f| f.write weights }
+    log = HealthLog.new 'fixture.yml'
+    expected = [
+      '+' * 45,
+      '+' * 30,
+      '-' * 30,
+    ].reverse
+    assert_equal expected, log.graph(3)
+  end
+
+  def test_graph_with_missing_days
+    weights = { Date.today.to_s => { weight: 199.5 },
+                (Date.today - 2).to_s => { weight: 192 }
+    }.to_yaml
+    File.open('fixture.yml', 'w') { |f| f.write weights }
+    log = HealthLog.new 'fixture.yml'
+    expected = [
+      '+' * 45,
+      '',
+      '-' * 30,
+    ].reverse
+    assert_equal expected, log.graph(3)
+  end
+
   def test_reviewing_all_entries
   end
 

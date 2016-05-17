@@ -53,3 +53,7 @@ log.last_n_days(duration).each do |date, data|
 end
 
 puts
+log.graph.each do |bar|
+  puts bar
+end
+puts
