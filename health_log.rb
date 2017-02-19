@@ -2,12 +2,13 @@ require 'yaml'
 require 'yaml/store'
 
 class HealthLog
-  attr_reader :store, :config
+  attr_reader :store, :config, :date
 
-  def initialize(file, config_file: 'config.yml')
+  def initialize(file, date: nil, config_file: 'config.yml')
     @store = YAML::Store.new file
     config_path = File.join __dir__, config_file
     @config = YAML.load File.read(config_path)
+    @date = date || Date.today.to_s
   end
 
   def entry(raw_input)
@@ -29,7 +30,8 @@ class HealthLog
   def graph(n=7)
     weight_diffs_for_last_n_days(n).each_with_object([]) do |diff, chart|
       symbol = diff > 0 ? '+' : '-'
-      chart << symbol * diff.abs
+      actual = target + (diff/10.0)
+      chart << [symbol * diff.abs, actual].join('   ')
     end
   end
 
@@ -57,10 +59,6 @@ class HealthLog
     (0..(n-1)).each_with_object([]) do |n, roots|
       roots << (Date.today - n).to_s
     end.reverse
-  end
-
-  def date
-    Date.today.to_s
   end
 
   def parsed_input(raw_input)

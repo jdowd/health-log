@@ -4,6 +4,7 @@ require_relative 'health_log'
 
 report_only = false
 duration = nil
+date = Date.today.to_s
 
 while ARGV.any?
   arg = ARGV.shift
@@ -13,6 +14,8 @@ while ARGV.any?
   when 't'
     duration ||= 1
     report_only = true
+  when 'y'
+    date = (Date.today - 1).to_s
   when 'r'
     report_only = true
   end
@@ -21,7 +24,7 @@ end
 duration ||= 7
 
 file = File.join __dir__, 'history.yml'
-log = HealthLog.new file
+log = HealthLog.new file, date: date
 
 unless report_only
   puts
@@ -43,8 +46,8 @@ def justify(string)
   (normalize(string) + ':').ljust 15
 end
 
-log.last_n_days(duration).each do |date, data|
-  puts; puts date
+log.last_n_days(duration).each do |day, data|
+  puts; puts day
   log.tokens.each do |token|
     field = log.send(:keyword_mapping)[token]
     value = data[field.to_sym]
